@@ -1,9 +1,5 @@
 package com.develop_mouse.gummy_dang.post.domain.entity;
 
-import java.util.Set;
-
-import com.develop_mouse.gummy_dang.member.domain.entity.Member;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,26 +19,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class PostImage {
 
-	@Id @Column(name = "post_id")
+	@Id
+	@Column(name = "post_image_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "member_id")
-	private Member member;
-
-	@OneToMany(mappedBy = "post")
-	private Set<PostCoordinate> postCoordinates;
-
-	@OneToMany(mappedBy = "post")
-	private Set<PostImage> postImages;
+	@JoinColumn(name = "post_id")
+	private Post post;
 
 	@NotNull
-	@Column(length = 50)
-	private String title;
-	private Integer likeCount;
-	private String description;
-
+	private String imageUrl;
 }
