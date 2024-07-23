@@ -27,11 +27,17 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew clean build -x test
 
-      - name: Make directory / Copy Jar file
+      - name: Make directory
         if: github.event_name == 'push'
         run: |
           mkdir -p deploy
+
+      - name: Copy Jar, script, appspec files
+        if: github.event_name == 'push'
+        run: |
           cp ./build/libs/*.jar ./deploy
+          cp appspec.yaml ./deploy
+          cp ./scripts/*.sh ./deploy
 
       - name: Create zip file
         if: github.event_name == 'push'
@@ -49,7 +55,24 @@ jobs:
       - name: Upload zip file to S3
         if: github.event_name == 'push'
         env:
-          BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: aws s3 cp --region $AWS_REGION ./gummy-dang.zip s3://$BUCKET_NAME
+        run: aws s3 cp --region $AWS_REGION ./gummy-dang.zip s3://$AWS_BUCKET_NAME
+
+      - name: Deploy
+        if: github.event_name == 'push'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_APPLICATION_NAME: ${{ secrets.AWS_APPLICATION_NAME }}
+          AWS_DEPLOY_GROUP: ${{ secrets.AWS_DEPLOY_GROUP }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws deploy create-deployment \
+          --application-name ${AWS_APPLICATION_NAME} \
+          --deployment-group-name ${AWS_DEPLOY_GROUP} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${AWS_BUCKET_NAME},bundleType=zip,key=gummy-dang.zip \
+          --region ${AWS_REGION}
 
