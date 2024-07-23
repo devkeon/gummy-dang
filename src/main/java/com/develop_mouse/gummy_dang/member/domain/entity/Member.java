@@ -14,11 +14,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
@@ -31,12 +33,15 @@ public class Member extends BaseEntity {
 	private Set<Post> posts;
 
 	@NotNull
+	@Column(length = 20)
 	private String userName;
 	@NotNull
 	private String password;
 
 	private String address;
+	@Column(length = 20)
 	private String phoneNumber;
+	@Column(length = 20)
 	private String socialId;
 
 }
