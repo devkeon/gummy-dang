@@ -1,5 +1,7 @@
 package com.develop_mouse.gummy_dang.post.domain.entity;
 
+import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostCoordinate {
+public class PostCoordinate extends BaseEntity {
 
 	@Id @Column(name = "post_coordinate_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

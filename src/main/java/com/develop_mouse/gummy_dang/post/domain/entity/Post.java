@@ -2,6 +2,7 @@ package com.develop_mouse.gummy_dang.post.domain.entity;
 
 import java.util.Set;
 
+import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 
 import jakarta.persistence.Column;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseEntity {
 
 	@Id @Column(name = "post_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
