@@ -1,5 +1,8 @@
 package com.develop_mouse.gummy_dang.reward.domain.entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -18,6 +21,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE reward SET active_status = 'DELETED' WHERE reward_id = ?")
+@SQLRestriction("active_status <> 'DELETED'")
 public class Reward extends BaseEntity {
 
 	@Id @Column(name = "reward_id")

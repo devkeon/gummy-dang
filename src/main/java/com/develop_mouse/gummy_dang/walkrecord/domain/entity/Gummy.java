@@ -1,5 +1,8 @@
 package com.develop_mouse.gummy_dang.walkrecord.domain.entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -19,6 +22,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE gummy SET active_status = 'DELETED' WHERE gummy_id = ?")
+@SQLRestriction("active_status <> 'DELETED'")
 public class Gummy extends BaseEntity {
 
 	@Id

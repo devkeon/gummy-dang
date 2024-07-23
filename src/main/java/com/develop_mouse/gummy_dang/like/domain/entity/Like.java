@@ -1,5 +1,8 @@
 package com.develop_mouse.gummy_dang.like.domain.entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
@@ -24,6 +27,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "likes")
+@SQLDelete(sql = "UPDATE likes SET active_status = 'DELETED' WHERE like_id = ?")
+@SQLRestriction("active_status <> 'DELETED'")
 public class Like extends BaseEntity {
 
 	@Id

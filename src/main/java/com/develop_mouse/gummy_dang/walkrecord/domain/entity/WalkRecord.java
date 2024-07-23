@@ -2,6 +2,9 @@ package com.develop_mouse.gummy_dang.walkrecord.domain.entity;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 
@@ -24,6 +27,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE walk_record SET active_status = 'DELETED' WHERE walk_record_id = ?")
+@SQLRestriction("active_status <> 'DELETED'")
 public class WalkRecord extends BaseEntity {
 
 	@Id
@@ -31,10 +36,12 @@ public class WalkRecord extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "member_id")
 	private Member member;
 
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "gummy_id")
 	private Gummy gummy;

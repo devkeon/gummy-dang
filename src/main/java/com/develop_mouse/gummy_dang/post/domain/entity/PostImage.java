@@ -1,5 +1,8 @@
 package com.develop_mouse.gummy_dang.post.domain.entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -21,6 +24,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE post_image SET active_status = 'DELETED' WHERE post_image_id = ?")
+@SQLRestriction("active_status <> 'DELETED'")
 public class PostImage extends BaseEntity {
 
 	@Id
