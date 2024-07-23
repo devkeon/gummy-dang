@@ -36,7 +36,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           cp ./build/libs/*.jar ./deploy
-          cp appspec.yaml ./deploy
+          cp appspec.yml ./deploy
           cp ./scripts/*.sh ./deploy
 
       - name: Create zip file
