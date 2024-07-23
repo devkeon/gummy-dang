@@ -1,10 +1,8 @@
-package com.develop_mouse.gummy_dang.post.domain.entity;
-
-import java.util.Set;
+package com.develop_mouse.gummy_dang.like.domain.entity;
 
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
-import com.develop_mouse.gummy_dang.like.domain.entity.Like;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
+import com.develop_mouse.gummy_dang.post.domain.entity.Post;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,8 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,9 +23,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post extends BaseEntity {
+@Table(name = "likes")
+public class Like extends BaseEntity {
 
-	@Id @Column(name = "post_id")
+	@Id
+	@Column(name = "like_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -36,19 +35,7 @@ public class Post extends BaseEntity {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
-	@OneToMany(mappedBy = "post")
-	private Set<PostCoordinate> postCoordinates;
-
-	@OneToMany(mappedBy = "post")
-	private Set<PostImage> postImages;
-
-	@OneToMany(mappedBy = "post")
-	private Set<Like> like;
-
-	@NotNull
-	@Column(length = 50)
-	private String title;
-	private Integer likeCount;
-	private String description;
-
+	@ManyToOne
+	@JoinColumn(name = "post_id")
+	private Post post;
 }

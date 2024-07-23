@@ -3,6 +3,7 @@ package com.develop_mouse.gummy_dang.member.domain.entity;
 import java.util.Set;
 
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
+import com.develop_mouse.gummy_dang.like.domain.entity.Like;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
 
 import jakarta.persistence.Column;
@@ -31,6 +32,9 @@ public class Member extends BaseEntity {
 
 	@OneToMany(mappedBy = "member")
 	private Set<Post> posts;
+
+	@OneToMany(mappedBy = "member")
+	private Set<Like> like;
 
 	@NotNull
 	@Column(length = 20)
