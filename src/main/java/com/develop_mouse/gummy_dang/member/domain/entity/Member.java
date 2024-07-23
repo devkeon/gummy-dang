@@ -5,6 +5,7 @@ import java.util.Set;
 import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.like.domain.entity.Like;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
+import com.develop_mouse.gummy_dang.walkrecord.domain.entity.WalkRecord;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +36,9 @@ public class Member extends BaseEntity {
 
 	@OneToMany(mappedBy = "member")
 	private Set<Like> like;
+
+	@OneToMany(mappedBy = "member")
+	private Set<WalkRecord> walkRecords;
 
 	@NotNull
 	@Column(length = 20)
