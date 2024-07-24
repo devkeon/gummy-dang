@@ -3,8 +3,7 @@
 REPOSITORY=/home/ubuntu/app
 
 echo "> 현재 구동 중인 애플리케이션 PID 확인"
-PORT=8080
-CURRENT_PID=$(lsof -t -i:$PORT)
+CURRENT_PID=$(lsof -t -i:8080)
 
 echo "현재 구동 중인 애플리케이션 PID: $CURRENT_PID"
 
@@ -19,7 +18,7 @@ fi
 
 # 배포할 새 애플리케이션(.jar 파일) 선택
 echo "> 새 애플리케이션 배포"
-JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
+JAR_NAME=$(ls -tr $REPOSITORY/gummy-dang-0.0.1-SNAPSHOT.jar | tail -n 1)
 
 echo "> JAR 파일 이름: $JAR_NAME"
 
