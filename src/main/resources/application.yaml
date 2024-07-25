@@ -1,10 +1,12 @@
 spring:
   profiles:
     active:
-      - local
+      - prod
     group:
       local:
         - local
       prod:
         - prod
-#    include:
+    include:
+      - jwt
+      - oauth
