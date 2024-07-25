@@ -21,6 +21,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+	uniqueConstraints = {
+		@UniqueConstraint(
+			name = "user_name_unique",
+			columnNames = {"user_name"}
+		)
+	}
+)
 @SQLDelete(sql = "UPDATE member SET active_status = 'DELETED' WHERE member_id = ?")
 @SQLRestriction("active_status <> 'DELETED'")
 public class Member extends BaseEntity {
@@ -55,6 +65,9 @@ public class Member extends BaseEntity {
 	private String userName;
 	@NotNull
 	private String password;
+	@NotNull
+	@Column(length = 20)
+	private String nickname;
 
 	private String address;
 	@Column(length = 20)
