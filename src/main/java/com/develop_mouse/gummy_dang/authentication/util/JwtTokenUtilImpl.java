@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class JwtTokenUtil {
+public class JwtTokenUtilImpl implements JwtTokenUtil{
 	private final SecretKey key;
 	private final Long accessExpiration;
 	private final Long refreshExpiration;
@@ -41,7 +41,7 @@ public class JwtTokenUtil {
 	private static final String REFRESH_TOKEN_SUBJECT = "refreshToken";
 	private static final String GRANT_TYPE = "Bearer ";
 
-	public JwtTokenUtil(@Value("${jwt.token.secret-key}") String secretKey, @Value("${jwt.token.expire.access}") Long accessExpiration,
+	public JwtTokenUtilImpl(@Value("${jwt.token.secret-key}") String secretKey, @Value("${jwt.token.expire.access}") Long accessExpiration,
 		@Value("${jwt.token.expire.refresh}") Long refreshExpiration, MemberRepository repository) {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -50,6 +50,7 @@ public class JwtTokenUtil {
 		this.memberRepository = repository;
 	}
 
+	@Override
 	public String generateAccessToken(Authentication authentication) {
 
 		String authority = authentication.getAuthorities().stream()
@@ -67,6 +68,7 @@ public class JwtTokenUtil {
 			.compact();
 	}
 
+	@Override
 	public String generateRefreshToken() {
 
 		return Jwts.builder()
@@ -76,6 +78,7 @@ public class JwtTokenUtil {
 			.compact();
 	}
 
+	@Override
 	public Authentication getAuthentication(String accessToken) {
 
 		Optional<Claims> payload = Optional.of(Jwts.parser()
@@ -107,6 +110,7 @@ public class JwtTokenUtil {
 		return new UsernamePasswordAuthenticationToken(jwtMemberDetail, sessionMember.getPassword(), authorities);
 	}
 
+	@Override
 	public Authentication createAuthentication(Member member) {
 
 		List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(member.getRole().getRole()));
@@ -122,6 +126,7 @@ public class JwtTokenUtil {
 
 	}
 
+	@Override
 	public Optional<String> extractAccessToken(HttpServletRequest request) {
 		return Optional.ofNullable(request.getHeader("Authorization"))
 			.filter(token ->
@@ -131,6 +136,7 @@ public class JwtTokenUtil {
 	}
 
 	// Refresh Token 쿠키에서 추출 메서드
+	@Override
 	public Optional<String> extractRefreshToken(HttpServletRequest request) {
 		return Arrays.stream(request.getCookies())
 			.filter(cookie ->
@@ -139,6 +145,7 @@ public class JwtTokenUtil {
 			.map(Cookie::getValue);
 	}
 
+	@Override
 	public boolean validate(String token) {
 
 		try {
