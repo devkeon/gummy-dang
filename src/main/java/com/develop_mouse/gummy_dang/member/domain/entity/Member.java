@@ -5,7 +5,7 @@ import java.util.Set;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
+import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.like.domain.entity.Like;
 import com.develop_mouse.gummy_dang.member.domain.Role;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
@@ -69,13 +69,20 @@ public class Member extends BaseEntity {
 	@Column(length = 20)
 	private String nickname;
 
+	private String refreshToken;
+
 	private String address;
 	@Column(length = 20)
 	private String phoneNumber;
 	@Column(length = 20)
 	private String socialId;
 
+	@NotNull
 	@Enumerated(value = EnumType.STRING)
 	private Role role;
+
+	public void updateRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
 
 }

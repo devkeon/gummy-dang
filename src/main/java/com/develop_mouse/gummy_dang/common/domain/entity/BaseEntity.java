@@ -1,6 +1,8 @@
-package com.develop_mouse.gummy_dang.common.entity;
+package com.develop_mouse.gummy_dang.common.domain.entity;
 
 import java.time.LocalDateTime;
+
+import com.develop_mouse.gummy_dang.common.domain.ActiveStatus;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

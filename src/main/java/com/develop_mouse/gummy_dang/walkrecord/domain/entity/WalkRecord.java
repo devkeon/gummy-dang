@@ -6,7 +6,7 @@ import java.util.Set;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
+import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 
 import jakarta.persistence.Column;

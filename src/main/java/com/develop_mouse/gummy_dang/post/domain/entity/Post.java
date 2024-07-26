@@ -2,11 +2,10 @@ package com.develop_mouse.gummy_dang.post.domain.entity;
 
 import java.util.Set;
 
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
+import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.like.domain.entity.Like;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 
