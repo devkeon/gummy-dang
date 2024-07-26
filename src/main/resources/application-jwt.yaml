@@ -5,4 +5,4 @@ jwt:
       refresh: 60480000 # 일주일
     secret-key: ${SECRET_KEY}
   cookie:
-    expire: 60480000 # 일주일
+    expire: 604800 # 일주일
