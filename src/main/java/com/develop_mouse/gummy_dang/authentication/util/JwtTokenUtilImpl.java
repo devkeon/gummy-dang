@@ -1,4 +1,4 @@
-package com.develop_mouse.gummy_dang.login.util;
+package com.develop_mouse.gummy_dang.authentication.util;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.develop_mouse.gummy_dang.login.domain.JwtMemberDetail;
+import com.develop_mouse.gummy_dang.authentication.domain.JwtMemberDetail;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
 
