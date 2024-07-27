@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.develop_mouse.gummy_dang.authentication.domain.response.LoginSuccessResponse;
 import com.develop_mouse.gummy_dang.authentication.util.JwtTokenUtil;
@@ -21,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -45,6 +47,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 		String accessToken = jwtTokenProvider.generateAccessToken(genAuthentication);
 		String refreshToken = jwtTokenProvider.generateRefreshToken();
+
+		member.updateRefreshToken(refreshToken);
 
 		response.setHeader("Authorization", accessToken);
 		response.setCharacterEncoding("UTF-8");
