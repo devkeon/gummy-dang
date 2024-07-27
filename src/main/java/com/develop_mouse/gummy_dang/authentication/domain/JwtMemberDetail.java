@@ -1,4 +1,4 @@
-package com.develop_mouse.gummy_dang.login.domain;
+package com.develop_mouse.gummy_dang.authentication.domain;
 
 import java.util.Collection;
 
