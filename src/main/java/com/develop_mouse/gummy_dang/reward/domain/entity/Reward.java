@@ -3,7 +3,7 @@ package com.develop_mouse.gummy_dang.reward.domain.entity;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.develop_mouse.gummy_dang.common.entity.BaseEntity;
+import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

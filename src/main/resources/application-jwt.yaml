@@ -1,0 +1,8 @@
+jwt:
+  token:
+    expire:
+      access: 1800000 # 30분
+      refresh: 60480000 # 일주일
+    secret-key: ${SECRET_KEY}
+  cookie:
+    expire: 604800 # 일주일

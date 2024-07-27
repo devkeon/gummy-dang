@@ -1,4 +1,4 @@
-package com.develop_mouse.gummy_dang.common.entity;
+package com.develop_mouse.gummy_dang.common.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

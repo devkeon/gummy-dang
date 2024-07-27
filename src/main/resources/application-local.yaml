@@ -1,13 +1,14 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url:
-    username:
-    password:
+    url: jdbc:mysql://localhost:3306/gummy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: Antifragile1!
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
