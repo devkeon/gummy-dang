@@ -1,11 +1,14 @@
 package com.develop_mouse.gummy_dang.member.service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.UUID;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.develop_mouse.gummy_dang.common.domain.ResponseCode;
 import com.develop_mouse.gummy_dang.common.domain.response.Response;
 import com.develop_mouse.gummy_dang.member.domain.Role;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
@@ -36,6 +39,9 @@ public class MemberServiceImpl implements MemberService {
 			.role(Role.MEMBER)
 			.build();
 
+		if (memberRepository.findMemberByUserName(signUpMember.getUserName()).isPresent()) {
+			return Response.fail(ResponseCode.MEMBER_USERNAME_DUPLICATION);
+		}
 		memberRepository.save(signUpMember);
 
 		return Response.ok();
