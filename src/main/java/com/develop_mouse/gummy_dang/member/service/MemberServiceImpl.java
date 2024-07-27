@@ -1,9 +1,7 @@
 package com.develop_mouse.gummy_dang.member.service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.UUID;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
