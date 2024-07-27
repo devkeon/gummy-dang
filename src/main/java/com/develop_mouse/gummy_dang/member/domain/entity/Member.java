@@ -74,8 +74,8 @@ public class Member extends BaseEntity {
 	private String address;
 	@Column(length = 20)
 	private String phoneNumber;
-	@Column(length = 20)
-	private String socialId;
+
+	private Long socialId;
 
 	@NotNull
 	@Enumerated(value = EnumType.STRING)

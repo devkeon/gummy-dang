@@ -18,7 +18,7 @@ public abstract class BaseEntity {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	@Enumerated(value = EnumType.STRING)
-	private ActiveStatus activeStatus;
+	private ActiveStatus activeStatus = ActiveStatus.ACTIVATED;
 
 	@PrePersist
 	public void prePersist() {
