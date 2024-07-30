@@ -37,7 +37,23 @@ public class PostCoordinate extends BaseEntity {
 	private Post post;
 
 	@NotNull
-	@Column(length = 50)
-	private String coordinate;
+	private Double latitude;
+	@NotNull
+	private Double longitude;
 
+	public Long getId() {
+		return id;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
 }

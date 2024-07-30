@@ -69,18 +69,6 @@ public class Post extends BaseEntity {
 		return imageUrl;
 	}
 
-	// +) 날짜 관련
-	@PrePersist // 엔티티 첨 생성 전에 호출
-	protected void onCreate() {
-		createdAt = LocalDateTime.now();
-	}
-
-	// 엔티티가 업뎃되기 전에 호출
-	@PreUpdate
-	protected void onUpdate() {
-		updatedAt = LocalDateTime.now();
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -89,13 +77,11 @@ public class Post extends BaseEntity {
 		return member;
 	}
 
-	//public Set<PostCoordinate> getPostCoordinates() {		return postCoordinates;	}
+	public Set<PostCoordinate> getPostCoordinates() {		return postCoordinates;	}
 
-	//public Set<PostImage> getPostImages() {		return postImages;	}
+	//public Set<PostImage> getPostImages() {	return postImages;	}
 
-	public Set<Like> getLike() {
-		return like;
-	}
+	//public Set<Like> getLike() {	return like;  }
 
 	public String getTitle() {
 		return title;

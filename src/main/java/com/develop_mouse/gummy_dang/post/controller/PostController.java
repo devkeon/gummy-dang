@@ -1,10 +1,13 @@
 package com.develop_mouse.gummy_dang.post.controller;
 
 import com.develop_mouse.gummy_dang.authentication.util.SecurityContextUtil;
+import com.develop_mouse.gummy_dang.common.Exception.BusinessException;
+import com.develop_mouse.gummy_dang.common.domain.ResponseCode;
+import com.develop_mouse.gummy_dang.common.domain.response.Response;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.develop_mouse.gummy_dang.post.domain.entity.PostCoordinate;
 import org.springframework.ui.Model;
 import com.develop_mouse.gummy_dang.post.service.PostService;
 import org.springframework.stereotype.Controller;
@@ -13,20 +16,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 // +)
 import jakarta.servlet.ServletContext;
+
     /*
     게시판 주요 기능
     1) 글목록 (/post/list)
     2) 작성 (/post/create)
+        - 지도 좌표값 받아와야 ..!
     3) 조회 (/post/{id})
     4) 수정 (/post/update/{id})
     5) 삭제 (/post/delete/{id})
     */
 
-    // 추가 해야할 것 이미지, 좌표값 관련 부분
+    // 추가 해야할 것: 좌표값 관련 부분
 
 
 @Controller
@@ -44,21 +50,21 @@ public class PostController {
 
     // 글 목록
     @GetMapping("/post/list")
-    public String postList(Model model){
+    public Response postList(Model model){
         model.addAttribute("post", postService.findAll());
-        return "postList";
+        return Response.ok();
     }
 
     // 글 생성 화면 form
     @GetMapping("/post/createForm")
-    public String createForm(Model model){
-        model.addAttribute("post", Post.builder().build());
-        return "create";
+    public Response createForm(Model model){
+        model.addAttribute("post", Post.builder().createdAt(LocalDateTime.now()).build());
+        return Response.ok();
     }
 
     // 글 작성
     @PostMapping("/post/create")
-    public String createPost(@ModelAttribute Post post,
+    public Response createPost(@ModelAttribute Post post,
                              @RequestParam("image") MultipartFile image) throws IOException {
 
         Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).get();
@@ -69,24 +75,24 @@ public class PostController {
             post.builder().imageUrl(imagePath).build();
         }
         postService.save(post);
-        return "postList";
+        return Response.ok();
     }
 
     // 글 수정 화면 form
     @PostMapping("/post/updateForm/{id}")
-    public String updatePostForm(@PathVariable Long id,
+    public Response updatePostForm(@PathVariable Long id,
                                  Model model){
         Post post = postService.findById(id);
         if (post == null){
-            // 예외처리
+            new BusinessException(ResponseCode.POST_NOT_FOUND);
         }
-        model.addAttribute("post", post);
-        return "update";
+        model.addAttribute("post", post.builder().updatedAt(LocalDateTime.now()).build());
+        return Response.ok();
     }
 
     // 글 수정
     @PostMapping("/post/update/{id}")
-    public String updatePost(@PathVariable long id,
+    public Response updatePost(@PathVariable long id,
                              @ModelAttribute Post post,
                              @RequestParam("image") MultipartFile image) throws  IOException{
         Post existingPost = postService.findById(id);
@@ -94,43 +100,43 @@ public class PostController {
         if (existingPost != null){ // 게시글 존재하면 수정
 
             Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).get();
-            if (!existingPost.getMember().equals(user)){
-             // 예외처리
+            if (!existingPost.getMember().equals(user)){ // 작성자 != 사용자 이면 예외 처리
+                new BusinessException(ResponseCode.POST_AUTHOR_DIFFERENCE);
             }
 
             existingPost.builder().title(post.getTitle())
                     .description(post.getDescription()).build();
 
-            if(!image.isEmpty()){ // 수정할 때 넘어오는 image 있으면
+            if(!image.isEmpty()){ // 수정할 때 넘어오는 image 있으면 그 이미지로 다시 저장
                 String imagePath = saveImage(image);
                 existingPost.builder().imageUrl(imagePath).build();
             }
         }
         postService.save(existingPost);
 
-        return "postList";
+        return Response.ok();
     }
 
 
     // 특정 id의 게시글 삭제
     @GetMapping("/post/delete/{id}")
-    public String deletePost(@PathVariable Long id){
+    public Response deletePost(@PathVariable Long id){
 
         Post post = postService.findById(id);
         Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).get();
         if (!post.getMember().equals(user)){
-            //예외 처리
+            new BusinessException(ResponseCode.POST_AUTHOR_DIFFERENCE);
         }
 
         postService.deleteById(id);
-        return  "postList";
+        return Response.ok();
     }
 
     // 글 조회
     @GetMapping("/post/{id}")
-    public String viewPost(@PathVariable Long id, Model model) {
+    public Response viewPost(@PathVariable Long id, Model model) {
         model.addAttribute("post", postService.findById(id));
-        return "view";
+        return Response.ok();
     }
 
 
