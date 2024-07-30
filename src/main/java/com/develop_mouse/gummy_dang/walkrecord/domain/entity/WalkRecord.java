@@ -51,15 +51,35 @@ public class WalkRecord extends BaseEntity {
 	@OneToMany(mappedBy = "walkRecord")
 	private Set<RecordImage> recordImages;
 
-	@Column(length = 50)
 	@NotNull
-	private String departure;
+	private Double departureLat;
 
-	@Column(length = 50)
 	@NotNull
-	private String arrival;
+	private Double departureLon;
+
+	@NotNull
+	private Double arrivalLat;
+
+	@NotNull
+	private Double arrivalLon;
 
 	@NotNull
 	private LocalDate recordDate;
+
+	public void updateDepartureLat(Double editDepartureLat) {
+		this.departureLat = editDepartureLat;
+	}
+
+	public void updateDepartureLon(Double editDepartureLon) {
+		this.departureLon = editDepartureLon;
+	}
+
+	public void updateArrivalLat(Double editArrivalLat) {
+		this.arrivalLat = editArrivalLat;
+	}
+
+	public void updateArrivalLon(Double editArrivalLon) {
+		this.arrivalLon = editArrivalLon;
+	}
 
 }

@@ -3,6 +3,8 @@ package com.develop_mouse.gummy_dang.walkrecord.domain.entity;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE record_image SET active_status = 'DELETED' WHERE record_image_id = ?")
 @SQLRestriction("active_status <> 'DELETED'")
-public class RecordImage {
+public class RecordImage extends BaseEntity {
 
 	@Id @Column(name = "record_image_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
