@@ -8,6 +8,7 @@ import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
 import com.develop_mouse.gummy_dang.post.domain.entity.PostCoordinate;
+import com.develop_mouse.gummy_dang.post.repository.PostCoordinateRepository;
 import org.springframework.ui.Model;
 import com.develop_mouse.gummy_dang.post.service.PostService;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,7 @@ public class PostController {
     private ServletContext servletContext; // ServletContext 주입
 
     private MemberRepository memberRepository;
+    private PostCoordinateRepository postCoordinateRepository;
 
     // 글 목록
     @GetMapping("/post/list")

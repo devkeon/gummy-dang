@@ -77,7 +77,7 @@ public class Post extends BaseEntity {
 		return member;
 	}
 
-	public Set<PostCoordinate> getPostCoordinates() {		return postCoordinates;	}
+	public Set<PostCoordinate> getPostCoordinates() { return postCoordinates; }
 
 	//public Set<PostImage> getPostImages() {	return postImages;	}
 

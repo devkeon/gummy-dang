@@ -36,6 +36,11 @@ public class PostCoordinate extends BaseEntity {
 	@JoinColumn(name = "post_id")
 	private Post post;
 
+
+	@Column(length = 50)
+	@NotNull
+	private String departure;
+
 	@NotNull
 	private Double latitude;
 	@NotNull
@@ -49,11 +54,15 @@ public class PostCoordinate extends BaseEntity {
 		return post;
 	}
 
-	public Double getLatitude() {
+	public @NotNull String getDeparture() {
+		return departure;
+	}
+
+	public @NotNull Double getLatitude() {
 		return latitude;
 	}
 
-	public Double getLongitude() {
+	public @NotNull Double getLongitude() {
 		return longitude;
 	}
 }
