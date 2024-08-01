@@ -142,6 +142,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 		walkRecord.updateDepartureLon(request.getDepartureLon());
 		walkRecord.updateArrivalLat(request.getArrivalLat());
 		walkRecord.updateArrivalLon(request.getArrivalLon());
+		walkRecord.updateRecordDate(request.getRecordDate());
 
 		WalkRecordResponse responseDto = WalkRecordResponse.fromEntity(walkRecord);
 		responseDto.updateImageUrl(walkRecord.getRecordImages().stream().map(RecordImage::getImageUrl).findFirst().orElse(null));
