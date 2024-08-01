@@ -82,4 +82,8 @@ public class WalkRecord extends BaseEntity {
 		this.arrivalLon = editArrivalLon;
 	}
 
+	public void updateRecordDate(LocalDate recordDate) {
+		this.recordDate = recordDate;
+	}
+
 }
