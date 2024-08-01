@@ -29,6 +29,7 @@ import com.develop_mouse.gummy_dang.authentication.handler.oauth.OAuthLoginFailu
 import com.develop_mouse.gummy_dang.authentication.handler.oauth.OAuthLoginSuccessHandler;
 import com.develop_mouse.gummy_dang.authentication.service.CustomOAuth2UserService;
 import com.develop_mouse.gummy_dang.authentication.util.JwtTokenUtil;
+import com.develop_mouse.gummy_dang.common.filter.ExceptionHandlerFilter;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -77,6 +78,7 @@ public class SecurityConfig {
 			);
 		httpSecurity.addFilterAfter(jsonAuthenticationFilter(), LogoutFilter.class);
 		httpSecurity.addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
+		httpSecurity.addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationFilter.class);
 
 		return httpSecurity.build();
 
@@ -139,5 +141,10 @@ public class SecurityConfig {
 		provider.setPasswordEncoder(passwordEncoder());
 		provider.setUserDetailsService(loginService);
 		return new ProviderManager(provider);
+	}
+
+	@Bean
+	public ExceptionHandlerFilter exceptionHandlerFilter() {
+		return new ExceptionHandlerFilter(objectMapper);
 	}
 }
