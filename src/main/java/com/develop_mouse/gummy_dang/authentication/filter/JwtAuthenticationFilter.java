@@ -68,6 +68,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			// access token 만료 흐름
 		} catch (ExpiredJwtException e){
 
+			log.info("access token expired = {}", accessToken);
+
 			Claims claims = e.getClaims();
 
 			String refreshToken = jwtTokenUtil.extractRefreshToken(request).stream()
@@ -78,7 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				throw new RuntimeException("login expired");
 			}
 
-			Member currentMember = memberRepository.findById((Long)claims.get("id")).stream()
+			Member currentMember = memberRepository.findById(Long.parseLong(claims.get("id").toString())).stream()
 				.findAny()
 				.orElseThrow(() -> new RuntimeException("no such member"));
 
@@ -89,6 +91,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			String generateRefreshToken = jwtTokenUtil.generateRefreshToken();
 
 			currentMember.updateRefreshToken(generateRefreshToken);
+			memberRepository.save(currentMember);
 
 			Authentication createdAuthentication = jwtTokenUtil.createAuthentication(currentMember);
 
@@ -96,7 +99,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			response.setHeader("Authorization", generatedAccessToken);
 
-			ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+			ResponseCookie cookie = ResponseCookie.from("refreshToken", generateRefreshToken)
 				.path("/")
 				.httpOnly(true)
 				.maxAge(COOKIE_EXPIRATION)
