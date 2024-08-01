@@ -1,0 +1,3 @@
+aws:
+  s3:
+    image-url: ${AWS_S3_IMAGE_URL}
