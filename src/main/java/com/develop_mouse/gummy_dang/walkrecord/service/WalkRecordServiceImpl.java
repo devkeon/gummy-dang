@@ -3,6 +3,7 @@ package com.develop_mouse.gummy_dang.walkrecord.service;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import com.develop_mouse.gummy_dang.walkrecord.domain.response.WalkRecordDetailL
 import com.develop_mouse.gummy_dang.walkrecord.domain.response.WalkRecordListResponse;
 import com.develop_mouse.gummy_dang.walkrecord.domain.response.WalkRecordResponse;
 import com.develop_mouse.gummy_dang.walkrecord.repository.GummyRepository;
+import com.develop_mouse.gummy_dang.walkrecord.repository.RecordImageRepository;
 import com.develop_mouse.gummy_dang.walkrecord.repository.WalkRecordRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,9 +37,15 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 	private final WalkRecordRepository walkRecordRepository;
 	private final MemberRepository memberRepository;
 	private final GummyRepository gummyRepository;
+	private final RecordImageRepository recordImageRepository;
 	private final SecurityContextUtil securityContextUtil;
+
 	private static final double EARTH_RADIUS = 6371000;
 	private static final Random randomClass = new Random();
+	private static final String DEFAULT_IMAGE = "profile/default.jpeg";
+
+	@Value("${aws.s3.image-url}")
+	private String DEFAULT_BUCKET_URL;
 
 	@Override
 	public Response<WalkRecordResponse> createWalkRecord(WalkRecordCreateRequest request) {
@@ -73,7 +81,16 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 
 		WalkRecordResponse responseDto = WalkRecordResponse.fromEntity(savedWalkRecord);
 
-		responseDto.updateImageUrl("default");
+		String defaultURl = DEFAULT_BUCKET_URL + DEFAULT_IMAGE;
+
+		RecordImage recordImage = RecordImage.builder()
+			.walkRecord(savedWalkRecord)
+			.imageUrl(defaultURl)
+			.build();
+
+		recordImageRepository.save(recordImage);
+
+		responseDto.updateImageUrl(defaultURl);
 		responseDto.updateDistance(distance);
 
 		return Response.ok(responseDto);
