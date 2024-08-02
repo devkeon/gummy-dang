@@ -32,4 +32,10 @@ public abstract class BaseEntity {
 		this.updatedAt = LocalDateTime.now();
 	}
 
+	public void updateActiveStatus(ActiveStatus activeStatus) {
+		this.activeStatus = activeStatus;
+	}
+
+
+
 }
