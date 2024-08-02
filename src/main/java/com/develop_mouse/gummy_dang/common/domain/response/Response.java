@@ -33,4 +33,8 @@ public class Response<T> {
 		return new Response<>(responseCode.getResponseCode());
 	}
 
+	public static <T> Response<T> fail(String code) {
+		return new Response<>(code);
+	}
+
 }

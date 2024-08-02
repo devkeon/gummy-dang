@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.develop_mouse.gummy_dang.authentication.util.JwtTokenUtil;
+import com.develop_mouse.gummy_dang.common.Exception.BusinessException;
+import com.develop_mouse.gummy_dang.common.domain.ResponseCode;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
 
@@ -46,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		String accessToken = jwtTokenUtil.extractAccessToken(request).stream()
 			.findAny()
-			.orElseThrow(() -> new RuntimeException("access token null"));
+			.orElseThrow(() -> new BusinessException(ResponseCode.ACCESS_TOKEN_NOT_FOUND));
 
 		Authentication authentication;
 
@@ -59,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			String refreshToken = String.valueOf(jwtTokenUtil.extractRefreshToken(request));
 
 			if (refreshToken == null){
-				throw new RuntimeException("refresh token required");
+				throw new BusinessException(ResponseCode.REFRESH_TOKEN_NOT_FOUND);
 			}
 
 			response.setHeader("Authorization", accessToken);
@@ -68,27 +70,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			// access token 만료 흐름
 		} catch (ExpiredJwtException e){
 
+			log.info("access token expired = {}", accessToken);
+
 			Claims claims = e.getClaims();
 
 			String refreshToken = jwtTokenUtil.extractRefreshToken(request).stream()
 				.findAny()
-				.orElseThrow(() -> new RuntimeException("refresh token null"));
+				.orElseThrow(() -> new BusinessException(ResponseCode.REFRESH_TOKEN_NOT_FOUND));
 
 			if (!jwtTokenUtil.validate(refreshToken)){
-				throw new RuntimeException("login expired");
+				throw new BusinessException(ResponseCode.MEMBER_LOGIN_SESSION_EXPIRED);
 			}
 
-			Member currentMember = memberRepository.findById((Long)claims.get("id")).stream()
+			Member currentMember = memberRepository.findById(Long.parseLong(claims.get("id").toString())).stream()
 				.findAny()
-				.orElseThrow(() -> new RuntimeException("no such member"));
+				.orElseThrow(() -> new BusinessException(ResponseCode.MEMBER_NOT_FOUND));
 
 			if (!currentMember.getRefreshToken().equals(refreshToken)){
-				throw new RuntimeException("login expired");
+				throw new BusinessException(ResponseCode.MEMBER_LOGIN_SESSION_EXPIRED);
 			}
 
 			String generateRefreshToken = jwtTokenUtil.generateRefreshToken();
 
 			currentMember.updateRefreshToken(generateRefreshToken);
+			memberRepository.save(currentMember);
 
 			Authentication createdAuthentication = jwtTokenUtil.createAuthentication(currentMember);
 
@@ -96,7 +101,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			response.setHeader("Authorization", generatedAccessToken);
 
-			ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+			ResponseCookie cookie = ResponseCookie.from("refreshToken", generateRefreshToken)
 				.path("/")
 				.httpOnly(true)
 				.maxAge(COOKIE_EXPIRATION)

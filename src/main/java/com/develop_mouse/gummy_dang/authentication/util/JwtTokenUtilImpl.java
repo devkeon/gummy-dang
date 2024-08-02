@@ -138,9 +138,10 @@ public class JwtTokenUtilImpl implements JwtTokenUtil{
 	// Refresh Token 쿠키에서 추출 메서드
 	@Override
 	public Optional<String> extractRefreshToken(HttpServletRequest request) {
-		return Arrays.stream(request.getCookies())
-			.filter(cookie ->
-				cookie.getName().equals("refreshToken"))
+		return Optional.ofNullable(request.getCookies())
+			.stream()
+			.flatMap(Arrays::stream)
+			.filter(cookie -> cookie.getName().equals("refreshToken"))
 			.findFirst()
 			.map(Cookie::getValue);
 	}
