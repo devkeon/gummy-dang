@@ -2,6 +2,7 @@ package com.develop_mouse.gummy_dang.common.filter;
 
 import java.io.IOException;
 import java.rmi.ServerException;
+import java.util.Arrays;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,7 +45,9 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (Exception exception) {
 
 			log.error("Exception = {}", exception.getMessage());
-			log.error("stack trace = {}", exception.getStackTrace());
+
+			Arrays.stream(exception.getStackTrace())
+					.peek(e -> log.error("stack = {}", e.toString()));
 
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
