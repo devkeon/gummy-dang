@@ -2,6 +2,7 @@ package com.develop_mouse.gummy_dang.member.domain.entity;
 
 import java.util.Set;
 
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -24,17 +25,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
+
 @Table(
 	uniqueConstraints = {
 		@UniqueConstraint(
@@ -77,12 +75,26 @@ public class Member extends BaseEntity {
 
 	private Long socialId;
 
+
 	@NotNull
 	@Enumerated(value = EnumType.STRING)
 	private Role role;
 
+
 	public void updateRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
 	}
+
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public void updatePhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public void updateAddress(String address){
+		this.address = address;
+	}
+
 
 }
