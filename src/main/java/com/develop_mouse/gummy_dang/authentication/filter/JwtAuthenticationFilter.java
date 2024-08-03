@@ -34,6 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Value("${jwt.cookie.expire}")
 	private Integer COOKIE_EXPIRATION;
 
+	private static String GRANT_TYPE = "Bearer ";
+
 	protected List<String> filterPassList = List.of("/api", "/api/login", "/probe", "/oauth2/authorization/kakao",
 		"/login/oauth2/code/kakao", "/favicon.ico", "/api/sign-up");
 
@@ -64,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				throw new BusinessException(ResponseCode.REFRESH_TOKEN_NOT_FOUND);
 			}
 
-			response.setHeader("Authorization", accessToken);
+			response.setHeader("Authorization", GRANT_TYPE + accessToken);
 			response.setHeader("Set-Cookie", refreshToken);
 
 			// access token 만료 흐름
