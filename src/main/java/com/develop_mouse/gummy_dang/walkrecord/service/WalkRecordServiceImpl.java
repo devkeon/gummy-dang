@@ -56,7 +56,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 		 * TODO: reward 관련 로직 추가
 		 */
 
-		Long randomGummyId = 1 + randomClass.nextLong(5);
+		Long randomGummyId = 1 + randomClass.nextLong(6);
 
 		Gummy randomGummy = gummyRepository.findAll()
 			.stream()
