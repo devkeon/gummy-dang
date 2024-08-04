@@ -1,14 +1,11 @@
 package com.develop_mouse.gummy_dang.reward.domain.entity;
 
-import java.util.Set;
-
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.reward.domain.RewardStatus;
-import com.develop_mouse.gummy_dang.walkrecord.domain.entity.WalkRecord;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +16,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
