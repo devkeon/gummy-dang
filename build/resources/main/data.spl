@@ -1,0 +1,3 @@
+insert into member(member_id, user_name, password, nickname, role, active_status) values (1, "test1", "{bcrypt}$2a$10$P0ZnMr7AhbU3V/3hBH2uYOFHHNWkDmoEK1fkDtlg9uG42mU8.Hlg.", "test1", "MEMBER", "ACTIVATED");
+insert into member(member_id, user_name, password, nickname, role, active_status) values (2, "test2", "{bcrypt}$2a$10$P0ZnMr7AhbU3V/3hBH2uYOFHHNWkDmoEK1fkDtlg9uG42mU8.Hlg.", "test2", "MEMBER", "ACTIVATED");
+-- password: test

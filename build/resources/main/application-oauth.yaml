@@ -4,9 +4,9 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
-            redirect-uri: ${KAKAO_REDIRECT_URI}
+            client-id: sdfsdf238ru2938ru92rje
+            client-secret: 238oiwejoijsdfr4r
+            redirect-uri: 234sdfsdfsdgdfshg
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope: profile_nickname, account_email

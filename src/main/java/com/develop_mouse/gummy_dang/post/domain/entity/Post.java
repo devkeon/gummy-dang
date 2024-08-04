@@ -1,9 +1,9 @@
 package com.develop_mouse.gummy_dang.post.domain.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -12,14 +12,14 @@ import com.develop_mouse.gummy_dang.like.domain.entity.Like;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-//+)
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -58,41 +58,22 @@ public class Post extends BaseEntity {
 	private Integer likeCount;
 	private String description;
 
- 	// +) 날짜 관련해서 추가한 부분
-	private LocalDateTime createdAt; // 생성 시간
-	private LocalDateTime updatedAt; // 수정 시간
-
-
 	// +) 이미지 관련해서 추가한 부분
 	private String imageUrl;
-	public String getImageUrl() {
-		return imageUrl;
+
+	public void updateTitle(@NotNull String title) {
+		this.title = title;
 	}
 
-	public Long getId() {
-		return id;
+	public void updateDescription(String description) {
+		this.description = description;
 	}
 
-	public Member getMember() {
-		return member;
+	public void addCoordinate(PostCoordinate coordinate){
+		if (this.postCoordinates == null) {
+			this.postCoordinates = new HashSet<>();
+		}
+		this.postCoordinates.add(coordinate);
+		coordinate.updatePost(this);
 	}
-
-	public Set<PostCoordinate> getPostCoordinates() { return postCoordinates; }
-
-	//public Set<PostImage> getPostImages() {	return postImages;	}
-
-	//public Set<Like> getLike() {	return like;  }
-
-	public String getTitle() {
-		return title;
-	}
-
-	//public Integer getLikeCount() {return likeCount;}
-
-	public String getDescription() {
-		return description;
-	}
-
-
-
 }

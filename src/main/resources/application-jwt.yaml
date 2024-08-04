@@ -3,6 +3,6 @@ jwt:
     expire:
       access: 1800000 # 30분
       refresh: 60480000 # 일주일
-    secret-key: ${SECRET_KEY}
+    secret-key: fdasfgdsaieg928hf392hbfuewww8021nd890cnh2091d129dh1290dhasjbd1028ncsajkhdjkh219d09nsad021jd291nkas22r
   cookie:
     expire: 604800 # 일주일

@@ -1,5 +1,6 @@
 package com.develop_mouse.gummy_dang.post.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -34,17 +35,13 @@ public class PostCoordinate extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "post_id")
+	//@JsonBackReference
 	private Post post;
 
-
-	@Column(length = 50)
 	@NotNull
-	private String departure;
-
+	private Double latitude; //위도
 	@NotNull
-	private Double latitude;
-	@NotNull
-	private Double longitude;
+	private Double longitude; //경도
 
 	public Long getId() {
 		return id;
@@ -54,15 +51,23 @@ public class PostCoordinate extends BaseEntity {
 		return post;
 	}
 
-	public @NotNull String getDeparture() {
-		return departure;
-	}
-
 	public @NotNull Double getLatitude() {
 		return latitude;
 	}
 
 	public @NotNull Double getLongitude() {
 		return longitude;
+	}
+
+	void updatePost(Post post) {
+		this.post = post;
+	}
+
+	public void updateLatitude(@NotNull Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public void updateLongitude(@NotNull Double longitude) {
+		this.longitude = longitude;
 	}
 }
