@@ -35,7 +35,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (BusinessException exception) {
 
 			log.error("BusinessException = {}", exception.getMessage());
-			log.error("stack trace = {}", exception.getStackTrace());
+			log.error("Error message for BusinessException:", exception);
 
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			response.setCharacterEncoding("UTF-8");
@@ -45,9 +45,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (Exception exception) {
 
 			log.error("Exception = {}", exception.getMessage());
-
-			Arrays.stream(exception.getStackTrace())
-					.peek(e -> log.error("stack = {}", e.toString()));
+			log.error("Error message for Exception:", exception);
 
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
