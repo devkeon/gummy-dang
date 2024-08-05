@@ -22,21 +22,12 @@ public class PostCoordinate extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "post_id")
-	//@JsonBackReference
 	private Post post;
 
 	@NotNull
 	private Double latitude; //위도
 	@NotNull
 	private Double longitude; //경도
-
-	public Long getId() {
-		return id;
-	}
-
-	public Post getPost() {
-		return post;
-	}
 
 	public @NotNull Double getLatitude() {
 		return latitude;
