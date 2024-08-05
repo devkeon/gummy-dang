@@ -26,11 +26,19 @@ public class MemberController {
 		return memberService.singUp(signUpRequest);
 	}
 
+	//마이페이지 - 회원 정보 조회
+	@GetMapping("/{id}")
+	public ResponseEntity<MemberDTO> retrieveMember(@PathVariable("id") Long id){
+		MemberDTO retrieveMember = memberService.retrieveMember(id);
+		if (retrieveMember == null){
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(retrieveMember);
+	}
 
-
-	//마이페이지 - 수정하기 버튼 눌렀을 때
+	//마이페이지 - 회원 정보 수정
 	@PutMapping("/{id}")
-	public ResponseEntity<MemberDTO> updateMember(@PathVariable Long id, @RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<MemberDTO> updateMember(@PathVariable("id") Long id, @RequestBody MemberDTO memberDTO) {
 		MemberDTO updatedMember = memberService.updateMember(id, memberDTO);
 		if (updatedMember == null) {
 			return ResponseEntity.notFound().build();
@@ -40,7 +48,7 @@ public class MemberController {
 
 	//회원 탈퇴
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id) {
 		boolean isDeleted = memberService.deleteMember(id);
 		if (!isDeleted) {
 			return ResponseEntity.notFound().build();
