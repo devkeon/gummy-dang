@@ -7,6 +7,8 @@ import com.develop_mouse.gummy_dang.member.dto.MemberDTO;
 public interface MemberService {
 
 	Response<Void> singUp(SignUpRequest signUpRequest);
+	//회원 정보 조회
+	MemberDTO retrieveMember(Long id);
 	//회원 정보 수정
 	MemberDTO updateMember(Long id, MemberDTO memberDTO);
 	//회원 탈퇴
