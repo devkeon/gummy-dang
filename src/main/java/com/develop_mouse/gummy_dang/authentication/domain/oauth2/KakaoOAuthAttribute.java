@@ -41,6 +41,7 @@ public class KakaoOAuthAttribute {
 			.password(passwordEncoder.encode(UUID.randomUUID().toString()))
 			.userName(kakaoOAuthUserInfo.getEmail())
 			.nickname(kakaoOAuthUserInfo.getNickname())
+			.profileImageUrl(kakaoOAuthUserInfo.getProfileImage())
 			.socialId(kakaoOAuthUserInfo.getId())
 			.role(Role.SOCIAL)
 			.build();
