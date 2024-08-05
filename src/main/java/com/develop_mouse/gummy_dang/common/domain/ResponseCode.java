@@ -15,8 +15,7 @@ public enum ResponseCode {
 	GUMMY_IMG_NOT_FOUND("GUM-001", "No such gummy exists."),
 	SERVER_ERROR("SEV-001", "Server went wrong."),
 	ACCESS_TOKEN_NOT_FOUND("SEV-002", "There's no access token."),
-	REFRESH_TOKEN_NOT_FOUND("SEV-003", "There's no refresh token."),
-	REWARD_NOT_FOUND("RWD-001", "There's no reward. Check out your Database.")
+	REFRESH_TOKEN_NOT_FOUND("SEV-003", "There's no refresh token.")
 	;
 
 	private final String responseCode;
