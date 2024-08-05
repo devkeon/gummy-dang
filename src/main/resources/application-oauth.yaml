@@ -9,7 +9,7 @@ spring:
             redirect-uri: ${KAKAO_REDIRECT_URI}
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            scope: profile_nickname, account_email
+            scope: profile_nickname, account_email, profile_image
             client-name: Kakao
         provider:
           kakao:
