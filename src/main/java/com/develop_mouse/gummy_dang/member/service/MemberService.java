@@ -2,16 +2,18 @@ package com.develop_mouse.gummy_dang.member.service;
 
 import com.develop_mouse.gummy_dang.common.domain.response.Response;
 import com.develop_mouse.gummy_dang.member.domain.request.SignUpRequest;
-import com.develop_mouse.gummy_dang.member.dto.MemberDTO;
+import com.develop_mouse.gummy_dang.member.domain.request.MemberUpdateRequest;
+import com.develop_mouse.gummy_dang.member.domain.response.MemberRetrieveResponse;
+import com.develop_mouse.gummy_dang.member.domain.response.MemberUpdateResponse;
 
 public interface MemberService {
 
 	Response<Void> singUp(SignUpRequest signUpRequest);
 	//회원 정보 조회
-	MemberDTO retrieveMember(Long id);
+	Response<MemberRetrieveResponse> retrieveMember();
 	//회원 정보 수정
-	MemberDTO updateMember(Long id, MemberDTO memberDTO);
+	Response<MemberUpdateResponse> updateMember(MemberUpdateRequest memberDTO);
 	//회원 탈퇴
-	boolean deleteMember(Long id);
+	Response<Void> deleteMember();
 
 }

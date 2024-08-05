@@ -54,7 +54,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 
-		LoginSuccessResponse loginSuccessResponse = LoginSuccessResponse.of(jwtMemberDetail.getUsername());
+		LoginSuccessResponse loginSuccessResponse = LoginSuccessResponse.of(member.getNickname());
 
 		try {
 			String responseBody = objectMapper.writeValueAsString(Response.ok(loginSuccessResponse));
