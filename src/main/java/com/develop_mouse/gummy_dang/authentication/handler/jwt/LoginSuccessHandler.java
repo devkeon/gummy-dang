@@ -67,8 +67,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 			.path("/")
 			.httpOnly(true)
 			.maxAge(COOKIE_EXPIRATION)
-			.sameSite("Lax")
-			.secure(false)
+			.sameSite("None")
+			.secure(true)
 			.build();
 
 		response.setHeader("Set-Cookie", cookie.toString());
