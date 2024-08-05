@@ -16,8 +16,11 @@ public enum ResponseCode {
 	SERVER_ERROR("SEV-001", "Server went wrong."),
 	ACCESS_TOKEN_NOT_FOUND("SEV-002", "There's no access token."),
 	REFRESH_TOKEN_NOT_FOUND("SEV-003", "There's no refresh token."),
-	REWARD_NOT_FOUND("RWD-001", "There's no reward. Check out your Database.")
-	;
+	REWARD_NOT_FOUND("RWD-001", "There's no reward. Check out your Database."),
+	POST_NOT_FOUND("PST-000","No such post exist."),
+	POST_WRITER_DIFFERENCE("PST-001","User and author are different"),
+	OVER_NUM_COORDINATES("PST-002", "A post can have at most 6 coordinates."),
+	COORDINATE_NOT_FOUND("PST-003", "No such coordinate exist.");
 
 	private final String responseCode;
 	private final String message;
