@@ -1,10 +1,8 @@
 package com.develop_mouse.gummy_dang.post.controller;
 
 import com.develop_mouse.gummy_dang.common.domain.response.Response;
-
-import com.develop_mouse.gummy_dang.post.service.PostService;
 import com.develop_mouse.gummy_dang.post.DTO.PostDTO;
-
+import com.develop_mouse.gummy_dang.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

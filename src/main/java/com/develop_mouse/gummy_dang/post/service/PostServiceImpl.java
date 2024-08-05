@@ -12,8 +12,6 @@ import com.develop_mouse.gummy_dang.post.domain.entity.Post;
 import com.develop_mouse.gummy_dang.post.domain.entity.PostCoordinate;
 import com.develop_mouse.gummy_dang.post.repository.PostCoordinateRepository;
 import com.develop_mouse.gummy_dang.post.repository.PostRepository;
-
-// +)
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
