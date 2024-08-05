@@ -11,4 +11,5 @@ public class MemberDTO {
     private String nickname;
     private String phoneNumber;
     private String address;
+    private String profileImageUrl;
 }
