@@ -1,10 +1,12 @@
 package com.develop_mouse.gummy_dang.member.service;
 
-import java.util.Optional;
 import java.util.UUID;
 
-import com.develop_mouse.gummy_dang.common.domain.ActiveStatus;
-import com.develop_mouse.gummy_dang.member.dto.MemberDTO;
+import com.develop_mouse.gummy_dang.authentication.util.SecurityContextUtil;
+import com.develop_mouse.gummy_dang.common.Exception.BusinessException;
+import com.develop_mouse.gummy_dang.member.domain.request.MemberUpdateRequest;
+import com.develop_mouse.gummy_dang.member.domain.response.MemberRetrieveResponse;
+import com.develop_mouse.gummy_dang.member.domain.response.MemberUpdateResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final SecurityContextUtil securityContextUtil;
 
 	@Override
 	public Response<Void> singUp(SignUpRequest signUpRequest) {
@@ -47,53 +50,61 @@ public class MemberServiceImpl implements MemberService {
 
 		return Response.ok();
 	}
+
 	//조회 메서드
 	@Override
-	public MemberDTO retrieveMember(Long id){
-		Optional<Member> optionalMember = memberRepository.findById(id);
-		if (optionalMember.isEmpty()){
-			return null;
-		}
-		Member member = optionalMember.get();
+	public Response<MemberRetrieveResponse> retrieveMember() {
 
+		Member contextMember = getContextMember();
 
-		return new MemberDTO(member.getNickname(),member.getPhoneNumber(),member.getAddress(), member.getProfileImageUrl());
+		MemberRetrieveResponse response = MemberRetrieveResponse.builder()
+			.nickname(contextMember.getNickname())
+			.profileImageUrl(contextMember.getProfileImageUrl())
+			.address(contextMember.getAddress())
+			.phoneNumber(contextMember.getPhoneNumber())
+			.build();
+
+		return Response.ok(response);
+
 	}
 
 	//수정 메서드
 	@Override
-	public MemberDTO updateMember(Long id, MemberDTO memberDTO) {
-		Optional<Member> optionalMember = memberRepository.findById(id);
-		if (optionalMember.isEmpty()) {
-			return null;
-		}
+	public Response<MemberUpdateResponse> updateMember(MemberUpdateRequest memberUpdateRequest) {
 
-		Member member = optionalMember.get();
-		member.updateNickname(memberDTO.getNickname());
-		member.updatePhoneNumber(memberDTO.getPhoneNumber());
-		member.updateAddress(memberDTO.getAddress());
-		member.updateprofileImageUrl((memberDTO.getProfileImageUrl()));
+		Member contextMember = getContextMember();
 
-		Member updatedMember = memberRepository.save(member);
+		contextMember.updateNickname(memberUpdateRequest.getNickname());
+		contextMember.updatePhoneNumber(memberUpdateRequest.getPhoneNumber());
+		contextMember.updateAddress(memberUpdateRequest.getAddress());
 
-		return new MemberDTO(updatedMember.getNickname(), updatedMember.getAddress(), updatedMember.getPhoneNumber(), updatedMember.getProfileImageUrl());
+		MemberUpdateResponse response = MemberUpdateResponse.builder()
+			.nickname(memberUpdateRequest.getNickname())
+			.address(memberUpdateRequest.getAddress())
+			.phoneNumber(memberUpdateRequest.getPhoneNumber())
+			.build();
+
+		return Response.ok(response);
 	}
 
-	//탈퇴 메서드
 	@Override
-	public boolean deleteMember(Long id) {
-		Optional<Member> optionalMember = memberRepository.findById(id);
-		if (optionalMember.isEmpty()) {
-			return false;
-		}
+	public Response<Void> deleteMember() {
 
-		Member member = optionalMember.get();
-		member.updateActiveStatus(ActiveStatus.DELETED);
-		memberRepository.save(member);
-		return true;
+		Member contextMember = getContextMember();
+
+		memberRepository.delete(contextMember);
+
+		return Response.ok();
 	}
 
-	
+	private Member getContextMember() {
+		Long contextMemberId = securityContextUtil.getContextMemberInfo().getMemberId();
+
+		return memberRepository.findById(contextMemberId).stream()
+			.findAny()
+			.orElseThrow(() -> new BusinessException(ResponseCode.MEMBER_NOT_FOUND));
+	}
+
 }
 
 
