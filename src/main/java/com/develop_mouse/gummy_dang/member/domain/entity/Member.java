@@ -96,7 +96,7 @@ public class Member extends BaseEntity {
 	public void updateAddress(String address){
 		this.address = address;
 	}
-	public void updateprofileImageUrl(String profileImageUrl){
+	public void updateProfileImageUrl(String profileImageUrl){
 		this.profileImageUrl = profileImageUrl;
 	}
 
