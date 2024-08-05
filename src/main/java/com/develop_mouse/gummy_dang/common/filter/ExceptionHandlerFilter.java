@@ -2,6 +2,7 @@ package com.develop_mouse.gummy_dang.common.filter;
 
 import java.io.IOException;
 import java.rmi.ServerException;
+import java.util.Arrays;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (BusinessException exception) {
 
 			log.error("BusinessException = {}", exception.getMessage());
-			log.error("stack trace = {}", exception.getStackTrace());
+			log.error("Error message for BusinessException:", exception);
 
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			response.setCharacterEncoding("UTF-8");
@@ -44,7 +45,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (Exception exception) {
 
 			log.error("Exception = {}", exception.getMessage());
-			log.error("stack trace = {}", exception.getStackTrace());
+			log.error("Error message for Exception:", exception);
 
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);

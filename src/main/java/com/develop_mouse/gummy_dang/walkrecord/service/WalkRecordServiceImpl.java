@@ -13,6 +13,7 @@ import com.develop_mouse.gummy_dang.common.domain.ResponseCode;
 import com.develop_mouse.gummy_dang.common.domain.response.Response;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
+import com.develop_mouse.gummy_dang.reward.service.RewardService;
 import com.develop_mouse.gummy_dang.walkrecord.domain.entity.Gummy;
 import com.develop_mouse.gummy_dang.walkrecord.domain.entity.RecordImage;
 import com.develop_mouse.gummy_dang.walkrecord.domain.entity.WalkRecord;
@@ -38,6 +39,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 	private final MemberRepository memberRepository;
 	private final GummyRepository gummyRepository;
 	private final RecordImageRepository recordImageRepository;
+	private final RewardService rewardService;
 	private final SecurityContextUtil securityContextUtil;
 
 	private static final double EARTH_RADIUS = 6371000;
@@ -52,11 +54,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 
 		Member contextMember = contextMember();
 
-		/*
-		 * TODO: reward 관련 로직 추가
-		 */
-
-		Long randomGummyId = 1 + randomClass.nextLong(5);
+		Long randomGummyId = 1 + randomClass.nextLong(6);
 
 		Gummy randomGummy = gummyRepository.findAll()
 			.stream()
@@ -78,6 +76,8 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 
 		double distance = haversineCalculator(savedWalkRecord.getDepartureLat(), savedWalkRecord.getDepartureLon(),
 			savedWalkRecord.getArrivalLat(), savedWalkRecord.getArrivalLon());
+
+		rewardService.createReward(distance);
 
 		WalkRecordResponse responseDto = WalkRecordResponse.fromEntity(savedWalkRecord);
 
