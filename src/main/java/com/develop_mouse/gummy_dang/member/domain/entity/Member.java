@@ -31,8 +31,6 @@ import jakarta.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
-
 @Table(
 	uniqueConstraints = {
 		@UniqueConstraint(
@@ -75,6 +73,9 @@ public class Member extends BaseEntity {
 
 	private Long socialId;
 
+	//프로필 이미지 url 추가
+	private String profileImageUrl;
+
 
 	@NotNull
 	@Enumerated(value = EnumType.STRING)
@@ -94,6 +95,9 @@ public class Member extends BaseEntity {
 	}
 	public void updateAddress(String address){
 		this.address = address;
+	}
+	public void updateprofileImageUrl(String profileImageUrl){
+		this.profileImageUrl = profileImageUrl;
 	}
 
 

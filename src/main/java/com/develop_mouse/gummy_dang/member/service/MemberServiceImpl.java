@@ -47,6 +47,18 @@ public class MemberServiceImpl implements MemberService {
 
 		return Response.ok();
 	}
+	//조회 메서드
+	@Override
+	public MemberDTO retrieveMember(Long id){
+		Optional<Member> optionalMember = memberRepository.findById(id);
+		if (optionalMember.isEmpty()){
+			return null;
+		}
+		Member member = optionalMember.get();
+
+
+		return new MemberDTO(member.getNickname(),member.getPhoneNumber(),member.getAddress(), member.getProfileImageUrl());
+	}
 
 	//수정 메서드
 	@Override
@@ -60,10 +72,11 @@ public class MemberServiceImpl implements MemberService {
 		member.updateNickname(memberDTO.getNickname());
 		member.updatePhoneNumber(memberDTO.getPhoneNumber());
 		member.updateAddress(memberDTO.getAddress());
+		member.updateprofileImageUrl((memberDTO.getProfileImageUrl()));
 
 		Member updatedMember = memberRepository.save(member);
 
-		return new MemberDTO(updatedMember.getNickname(), updatedMember.getAddress(), updatedMember.getPhoneNumber());
+		return new MemberDTO(updatedMember.getNickname(), updatedMember.getAddress(), updatedMember.getPhoneNumber(), updatedMember.getProfileImageUrl());
 	}
 
 	//탈퇴 메서드
@@ -79,8 +92,6 @@ public class MemberServiceImpl implements MemberService {
 		memberRepository.save(member);
 		return true;
 	}
-
-
 
 	
 }
