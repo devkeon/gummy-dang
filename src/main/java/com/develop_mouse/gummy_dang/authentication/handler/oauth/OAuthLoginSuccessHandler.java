@@ -1,6 +1,8 @@
 package com.develop_mouse.gummy_dang.authentication.handler.oauth;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -55,14 +57,15 @@ public class OAuthLoginSuccessHandler implements AuthenticationSuccessHandler {
 			ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
 				.path("/")
 				.httpOnly(true)
-				.sameSite("Lax")
+				.sameSite("None")
 				.maxAge(COOKIE_EXPIRATION)
 				.secure(true)
 				.build();
 
 			response.setHeader("Set-Cookie", cookie.toString());
 
-			String redirectUrl = "http://localhost:3000/oauth/callback?token=" + accessToken;
+			String redirectUrl = URLEncoder.encode( "http://localhost:3000/oauth/callback?token=" + accessToken
+				+ "&nickname=" + member.getNickname(), StandardCharsets.UTF_8);
 
 			response.sendRedirect(redirectUrl);
 
