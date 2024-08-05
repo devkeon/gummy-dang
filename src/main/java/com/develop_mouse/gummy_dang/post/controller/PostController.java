@@ -2,6 +2,8 @@ package com.develop_mouse.gummy_dang.post.controller;
 
 import com.develop_mouse.gummy_dang.common.domain.response.Response;
 import com.develop_mouse.gummy_dang.post.DTO.PostDTO;
+import com.develop_mouse.gummy_dang.post.domain.request.PostRequest;
+import com.develop_mouse.gummy_dang.post.domain.response.PostResponse;
 import com.develop_mouse.gummy_dang.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,34 +31,31 @@ public class PostController {
 
     // 글 목록
     @GetMapping("/post/list")
-    public Response<List<PostDTO>> postList(){
+    public Response<List<PostResponse>> postList(){
         return postService.postList();
     }
 
     // 글 작성
-    @PostMapping("/post/create")
-    public Response<Void> createPost(@RequestBody PostDTO postDTO){
-        postService.createPost(postDTO);
-        return Response.ok();
+    @PostMapping("/post")
+    public Response<PostResponse> createPost(@RequestBody PostRequest postRequest){
+        return postService.createPost(postRequest);
     }
 
     // 글 수정
-    @PostMapping("/post/update/{id}")
-    public Response<Void> updatePost(@PathVariable long id, @RequestBody PostDTO postDTO){
-        postService.updatePost(id, postDTO);
-        return Response.ok();
+    @PatchMapping("/post")
+    public Response<PostResponse> updatePost(@RequestBody PostRequest postRequest){
+        return postService.updatePost(postRequest);
     }
 
     // 특정 id의 게시글 삭제
-    @DeleteMapping("/post/delete/{id}")
+    @DeleteMapping("/post/{id}")
     public Response<Void> deletePost(@PathVariable Long id){
-        postService.deletePost(id);
-        return Response.ok();
+        return postService.deletePost(id);
     }
 
     // 글 조회
     @GetMapping("/post/{id}")
-    public Response<PostDTO> detailPost(@PathVariable Long id) {
+    public Response<PostResponse> detailPost(@PathVariable Long id) {
         return postService.detailPost(id);
     }
 

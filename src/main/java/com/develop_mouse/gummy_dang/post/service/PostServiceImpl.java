@@ -10,11 +10,14 @@ import com.develop_mouse.gummy_dang.post.DTO.PostCoordinateDTO;
 import com.develop_mouse.gummy_dang.post.DTO.PostDTO;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
 import com.develop_mouse.gummy_dang.post.domain.entity.PostCoordinate;
+import com.develop_mouse.gummy_dang.post.domain.request.PostRequest;
+import com.develop_mouse.gummy_dang.post.domain.response.PostResponse;
 import com.develop_mouse.gummy_dang.post.repository.PostCoordinateRepository;
 import com.develop_mouse.gummy_dang.post.repository.PostRepository;
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -32,6 +35,7 @@ import java.util.*;
     */
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
 
@@ -46,37 +50,51 @@ public class PostServiceImpl implements PostService{
 
     // 글 생성
     @Override
-    public Response<Void> createPost(PostDTO postDTO){
-      Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).get();
+    public Response<PostResponse> createPost(PostRequest postRequest){
+        Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.MEMBER_NOT_FOUND));
 
       Post post = Post.builder()
               .member(user)
-              .title(postDTO.getTitle())
-              .description(postDTO.getDescription())
-              .imageUrl(postDTO.getImageUrl())
+              .title(postRequest.getTitle())
+              .description(postRequest.getDescription())
               .build();
 
-        if (postDTO.getPostCoordinates().size() > 6) { // 좌표 6개 초과 들어오면 오류
+        if (postRequest.getPostCoordinates().size() > 6) { // 좌표 6개 초과 들어오면 오류
             throw new BusinessException(ResponseCode.OVER_NUM_COORDINATES);
         }
 
-        for (PostCoordinateDTO coordinateDTO : postDTO.getPostCoordinates()) {
-            PostCoordinate postCoordinate = PostCoordinate.builder()
-                    .latitude(coordinateDTO.getLatitude())
-                    .longitude(coordinateDTO.getLongitude())
-                    .post(post).build();
-            post.addCoordinate(postCoordinate);
-        }
+        Post savedPost = postRepository.save(post);
 
-        postRepository.save(post);
-        return Response.ok();
+        postRequest.getPostCoordinates().forEach(postCoordinateDTO -> {
+            PostCoordinate postCoordinate = PostCoordinate.builder()
+                .latitude(postCoordinateDTO.getLatitude())
+                .longitude(postCoordinateDTO.getLongitude())
+                .post(post)
+                .build();
+            postCoordinateRepository.save(postCoordinate);
+            post.addCoordinate(postCoordinate);
+        });
+
+        PostResponse response = PostResponse.builder()
+            .postId(savedPost.getId())
+            .title(savedPost.getTitle())
+            .description(savedPost.getDescription())
+            .postCoordinates(savedPost.getPostCoordinates().stream()
+                .map(PostCoordinateDTO::fromEntity)
+                .toList())
+            .build();
+
+        return Response.ok(response);
     }
 
     // 글 수정 *좌표값...으어억*
     @Override
-    public Response<Void> updatePost(Long id, PostDTO postDTO) {
+    public Response<PostResponse> updatePost(PostRequest postRequest) {
 
-        Optional<Post> existingPost = postRepository.findById(id);
+        Optional<Post> existingPost = postRepository.findById(postRequest.getPostId());
+
         if (existingPost.isEmpty()){
             throw new BusinessException(ResponseCode.POST_NOT_FOUND);
         }
@@ -87,13 +105,13 @@ public class PostServiceImpl implements PostService{
             throw new BusinessException(ResponseCode.POST_WRITER_DIFFERENCE);
         }
 
-        post.updateTitle(postDTO.getTitle());
-        post.updateDescription(postDTO.getDescription());
+        post.updateTitle(postRequest.getTitle());
+        post.updateDescription(postRequest.getDescription());
 
         Set<PostCoordinate> existingCoordinates = post.getPostCoordinates();
         Set<PostCoordinate> updatedCoordinates = new HashSet<>();
 
-        long newCoordinatesCount = postDTO.getPostCoordinates().stream()
+        long newCoordinatesCount = postRequest.getPostCoordinates().stream()
                 .filter(coordinateDTO -> coordinateDTO.getId() == null)
                 .count();
 
@@ -101,7 +119,7 @@ public class PostServiceImpl implements PostService{
             throw new BusinessException(ResponseCode.OVER_NUM_COORDINATES);
         }
 
-        for(PostCoordinateDTO coordinateDTO : postDTO.getPostCoordinates()){
+        for(PostCoordinateDTO coordinateDTO : postRequest.getPostCoordinates()){
             if(coordinateDTO.getId() != null){ // 기존 좌표 업데이트
                 updateCoordinate(existingCoordinates, updatedCoordinates, coordinateDTO);
             }
@@ -116,9 +134,19 @@ public class PostServiceImpl implements PostService{
 
         existingCoordinates.clear();
         existingCoordinates.addAll(updatedCoordinates);
-        postRepository.save(post);
 
-        return Response.ok();
+        Post savedPost = postRepository.save(post);
+
+        PostResponse response = PostResponse.builder()
+            .postId(savedPost.getId())
+            .title(savedPost.getTitle())
+            .description(savedPost.getDescription())
+            .postCoordinates(savedPost.getPostCoordinates().stream()
+                .map(PostCoordinateDTO::fromEntity)
+                .toList())
+            .build();
+
+        return Response.ok(response);
     }
 
     // 기존 Post 에서 수정할 Coordinate 찾아서 수정하는 메서드
@@ -142,13 +170,15 @@ public class PostServiceImpl implements PostService{
     @Override
     public Response<Void> deletePost(Long id) {
 
-        Optional<Post> post = postRepository.findById(id);
-        if (post.isEmpty()){
-            throw new BusinessException(ResponseCode.POST_NOT_FOUND);
-        }
+        Post post = postRepository.findById(id).stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.POST_NOT_FOUND));
 
-        Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).get();
-        if (!post.get().getMember().equals(user)){
+        Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.MEMBER_NOT_FOUND));
+
+        if (!post.getMember().equals(user)){
             throw new BusinessException(ResponseCode.POST_WRITER_DIFFERENCE);
         }
 
@@ -158,49 +188,42 @@ public class PostServiceImpl implements PostService{
 
     // 글 하나 보기
     @Override
-    public Response<PostDTO> detailPost(Long id) {
-        Optional<Post> postOpt = postRepository.findById(id);
-        if (postOpt.isEmpty()){
-            throw new BusinessException(ResponseCode.POST_NOT_FOUND);
-        }
-        Post post = postOpt.get();
+    public Response<PostResponse> detailPost(Long id) {
+        Post post = postRepository.findById(id).stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.POST_NOT_FOUND));
 
-        Set<PostCoordinateDTO> postCoordinateDTOS = new HashSet<>();
-        for (PostCoordinate postCoordinate : post.getPostCoordinates()) {
-            PostCoordinateDTO postCoordinateDTO = coordinateToDTO(postCoordinate);
-            postCoordinateDTOS.add(postCoordinateDTO);
-        }
-
-        PostDTO postDTO = PostDTO.builder()
-                .id(post.getId())
+        PostResponse postResponse = PostResponse.builder()
+                .postId(post.getId())
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .imageUrl(post.getImageUrl())
-                .postCoordinates(postCoordinateDTOS)
+                .postCoordinates(post.getPostCoordinates().stream()
+                    .map(PostCoordinateDTO::fromEntity)
+                    .toList())
                 .build();
 
-        return Response.ok(postDTO);
+        return Response.ok(postResponse);
     }
 
     // 글 목록
     @Override
-    public Response<List<PostDTO>> postList() {
+    public Response<List<PostResponse>> postList() {
         List<Post> posts = postRepository.findAll();
-        List<PostDTO> postDTOS = new ArrayList<>();
 
-        for (Post post : posts) {
-            postDTOS.add(detailPost(post.getId()).getData());
-        }
-        return Response.ok(postDTOS);
-    }
+        List<PostResponse> postResponses = posts.stream()
+            .map(post -> PostResponse.builder()
+				.postId(post.getId())
+				.title(post.getTitle())
+				.description(post.getDescription())
+				.imageUrl(post.getImageUrl())
+				.postCoordinates(post.getPostCoordinates().stream()
+                    .map(PostCoordinateDTO::fromEntity)
+                    .toList())
+				.build())
+            .toList();
 
-    // PostCoordinate -> PostCoordinateDTO로 변환하기 위한 메서드
-    private PostCoordinateDTO coordinateToDTO(PostCoordinate postCoordinate) {
-        return PostCoordinateDTO.builder()
-                .id(postCoordinate.getId())
-                .latitude(postCoordinate.getLatitude())
-                .longitude(postCoordinate.getLongitude())
-                .build();
+        return Response.ok(postResponses);
     }
 
 }
