@@ -1,7 +1,9 @@
 package com.develop_mouse.gummy_dang.post.domain.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -9,22 +11,15 @@ import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.like.domain.entity.Like;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @Getter
@@ -33,12 +28,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE post SET active_status = 'DELETED' WHERE post_id = ?")
 @SQLRestriction("active_status <> 'DELETED'")
+
 public class Post extends BaseEntity {
 
+	@Getter
 	@Id @Column(name = "post_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Getter
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "member_id")
@@ -53,10 +51,29 @@ public class Post extends BaseEntity {
 	@OneToMany(mappedBy = "post")
 	private Set<Like> like;
 
+	// 게시물 제목/좋아요 수/내용
 	@NotNull
 	@Column(length = 50)
 	private String title;
 	private Integer likeCount;
 	private String description;
 
+	// +) 이미지 관련해서 추가한 부분
+	private String imageUrl;
+
+	public void updateTitle(@NotNull String title) {
+		this.title = title;
+	}
+
+	public void updateDescription(String description) {
+		this.description = description;
+	}
+
+	public void addCoordinate(PostCoordinate coordinate){
+		if (this.postCoordinates == null) {
+			this.postCoordinates = new HashSet<>();
+		}
+		this.postCoordinates.add(coordinate);
+		coordinate.updatePost(this);
+	}
 }
