@@ -11,7 +11,7 @@ import com.develop_mouse.gummy_dang.walkrecord.domain.entity.WalkRecord;
 
 public interface WalkRecordRepository extends JpaRepository<WalkRecord, Long> {
 
-	@EntityGraph(attributePaths = {"recordImages", "member"})
+	@EntityGraph(attributePaths = {"member"})
 	Optional<WalkRecord> findWalkRecordById(Long id);
 
 	@EntityGraph(attributePaths = {"gummy"})

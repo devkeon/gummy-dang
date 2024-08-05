@@ -20,7 +20,9 @@ public enum ResponseCode {
 	POST_NOT_FOUND("PST-000","No such post exist."),
 	POST_WRITER_DIFFERENCE("PST-001","User and author are different"),
 	OVER_NUM_COORDINATES("PST-002", "A post can have at most 6 coordinates."),
-	COORDINATE_NOT_FOUND("PST-003", "No such coordinate exist.");
+	COORDINATE_NOT_FOUND("PST-003", "No such coordinate exist."),
+	IMAGE_NOT_FOUND("IMG-001", "There's no image onb request.")
+	;
 
 	private final String responseCode;
 	private final String message;
