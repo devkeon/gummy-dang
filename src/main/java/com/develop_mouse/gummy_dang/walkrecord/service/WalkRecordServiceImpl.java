@@ -15,7 +15,6 @@ import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
 import com.develop_mouse.gummy_dang.reward.service.RewardService;
 import com.develop_mouse.gummy_dang.walkrecord.domain.entity.Gummy;
-import com.develop_mouse.gummy_dang.walkrecord.domain.entity.RecordImage;
 import com.develop_mouse.gummy_dang.walkrecord.domain.entity.WalkRecord;
 import com.develop_mouse.gummy_dang.walkrecord.domain.request.WalkRecordCreateRequest;
 import com.develop_mouse.gummy_dang.walkrecord.domain.request.WalkRecordUpdateRequest;
@@ -23,7 +22,6 @@ import com.develop_mouse.gummy_dang.walkrecord.domain.response.WalkRecordDetailL
 import com.develop_mouse.gummy_dang.walkrecord.domain.response.WalkRecordListResponse;
 import com.develop_mouse.gummy_dang.walkrecord.domain.response.WalkRecordResponse;
 import com.develop_mouse.gummy_dang.walkrecord.repository.GummyRepository;
-import com.develop_mouse.gummy_dang.walkrecord.repository.RecordImageRepository;
 import com.develop_mouse.gummy_dang.walkrecord.repository.WalkRecordRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,7 +36,6 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 	private final WalkRecordRepository walkRecordRepository;
 	private final MemberRepository memberRepository;
 	private final GummyRepository gummyRepository;
-	private final RecordImageRepository recordImageRepository;
 	private final RewardService rewardService;
 	private final SecurityContextUtil securityContextUtil;
 
@@ -62,6 +59,8 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 			.findAny()
 			.orElseThrow(() -> new BusinessException(ResponseCode.GUMMY_IMG_NOT_FOUND));
 
+		String defaultURl = DEFAULT_BUCKET_URL + DEFAULT_IMAGE;
+
 		WalkRecord walkRecord = WalkRecord.builder()
 			.gummy(randomGummy)
 			.member(contextMember)
@@ -70,6 +69,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 			.departureLon(request.getDepartureLon())
 			.arrivalLat(request.getArrivalLat())
 			.arrivalLon(request.getArrivalLon())
+			.recordImage(defaultURl)
 			.build();
 
 		WalkRecord savedWalkRecord = walkRecordRepository.save(walkRecord);
@@ -81,14 +81,6 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 
 		WalkRecordResponse responseDto = WalkRecordResponse.fromEntity(savedWalkRecord);
 
-		String defaultURl = DEFAULT_BUCKET_URL + DEFAULT_IMAGE;
-
-		RecordImage recordImage = RecordImage.builder()
-			.walkRecord(savedWalkRecord)
-			.imageUrl(defaultURl)
-			.build();
-
-		recordImageRepository.save(recordImage);
 
 		responseDto.updateImageUrl(defaultURl);
 		responseDto.updateDistance(distance);
@@ -109,7 +101,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 
 		WalkRecordResponse responseDto = WalkRecordResponse.fromEntity(walkRecord);
 		responseDto.updateDistance(distance);
-		responseDto.updateImageUrl(walkRecord.getRecordImages().stream().map(RecordImage::getImageUrl).findFirst().orElse(null));
+		responseDto.updateImageUrl(walkRecord.getRecordImage());
 
 		return Response.ok(responseDto);
 	}
@@ -145,7 +137,7 @@ public class WalkRecordServiceImpl implements WalkRecordService {
 		walkRecord.updateRecordDate(request.getRecordDate());
 
 		WalkRecordResponse responseDto = WalkRecordResponse.fromEntity(walkRecord);
-		responseDto.updateImageUrl(walkRecord.getRecordImages().stream().map(RecordImage::getImageUrl).findFirst().orElse(null));
+		responseDto.updateImageUrl(walkRecord.getRecordImage());
 		responseDto.updateDistance(haversineCalculator(walkRecord.getDepartureLat(), walkRecord.getDepartureLon(),
 			walkRecord.getArrivalLat(), walkRecord.getArrivalLon()));
 

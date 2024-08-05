@@ -1,7 +1,6 @@
 package com.develop_mouse.gummy_dang.walkrecord.domain.entity;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -16,7 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -48,8 +46,7 @@ public class WalkRecord extends BaseEntity {
 	@JoinColumn(name = "gummy_id")
 	private Gummy gummy;
 
-	@OneToMany(mappedBy = "walkRecord")
-	private Set<RecordImage> recordImages;
+	private String recordImage;
 
 	@NotNull
 	private Double departureLat;
@@ -84,6 +81,10 @@ public class WalkRecord extends BaseEntity {
 
 	public void updateRecordDate(LocalDate recordDate) {
 		this.recordDate = recordDate;
+	}
+
+	public void updateRecordImage(String recordImage) {
+		this.recordImage = recordImage;
 	}
 
 }

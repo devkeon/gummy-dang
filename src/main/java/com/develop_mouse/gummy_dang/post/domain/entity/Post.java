@@ -37,9 +37,6 @@ public class Post extends BaseEntity {
 	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PostCoordinate> postCoordinates;
 
-	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PostImage> postImages;
-
 	@OneToMany(mappedBy = "post")
 	private Set<Like> like;
 
@@ -67,5 +64,9 @@ public class Post extends BaseEntity {
 		}
 		this.postCoordinates.add(coordinate);
 		coordinate.updatePost(this);
+	}
+
+	public void updateImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }
