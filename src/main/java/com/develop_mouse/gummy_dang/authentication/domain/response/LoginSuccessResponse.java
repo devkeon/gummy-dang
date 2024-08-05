@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginSuccessResponse {
 
-	private String userName;
+	private String nickname;
 
-	public static LoginSuccessResponse of(String userName) {
-		return new LoginSuccessResponse(userName);
+	public static LoginSuccessResponse of(String nickname) {
+		return new LoginSuccessResponse(nickname);
 	}
 
 }
