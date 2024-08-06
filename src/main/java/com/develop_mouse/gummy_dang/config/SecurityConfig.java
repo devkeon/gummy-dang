@@ -94,8 +94,8 @@ public class SecurityConfig {
 		corsConfiguration.setAllowedOrigins(List.of(
 			"http://localhost:3000",
 			"http://localhost:8080",
-			"http://43.203.193.72:3000",
-			"http://ec2-43-203-193-72.ap-northeast-2.compute.amazonaws.com:3000"
+			"http://3.36.90.207:3000",
+			"http://ec2-3-36-90-207.ap-northeast-2.compute.amazonaws.com:3000"
 		));
 		corsConfiguration.setAllowCredentials(true);
 
