@@ -1,5 +1,6 @@
 package com.develop_mouse.gummy_dang.post.domain.response;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.develop_mouse.gummy_dang.post.DTO.PostCoordinateDTO;
@@ -21,6 +22,7 @@ public class PostResponse {
 	private String title;
 	private String description;
 	private String imageUrl;
+	private LocalDate createdAt;
 
 	private List<PostCoordinateDTO> postCoordinates;
 

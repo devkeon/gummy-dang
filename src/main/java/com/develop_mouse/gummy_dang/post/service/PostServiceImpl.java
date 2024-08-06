@@ -194,14 +194,15 @@ public class PostServiceImpl implements PostService{
             .orElseThrow(() -> new BusinessException(ResponseCode.POST_NOT_FOUND));
 
         PostResponse postResponse = PostResponse.builder()
-                .postId(post.getId())
-                .title(post.getTitle())
-                .description(post.getDescription())
-                .imageUrl(post.getImageUrl())
-                .postCoordinates(post.getPostCoordinates().stream()
-                    .map(PostCoordinateDTO::fromEntity)
-                    .toList())
-                .build();
+            .postId(post.getId())
+            .title(post.getTitle())
+            .description(post.getDescription())
+            .imageUrl(post.getImageUrl())
+            .postCoordinates(post.getPostCoordinates().stream()
+                .map(PostCoordinateDTO::fromEntity)
+                .toList())
+            .createdAt(post.getCreatedAt().toLocalDate())
+            .build();
 
         return Response.ok(postResponse);
     }
@@ -213,14 +214,14 @@ public class PostServiceImpl implements PostService{
 
         List<PostResponse> postResponses = posts.stream()
             .map(post -> PostResponse.builder()
-				.postId(post.getId())
-				.title(post.getTitle())
-				.description(post.getDescription())
-				.imageUrl(post.getImageUrl())
-				.postCoordinates(post.getPostCoordinates().stream()
+                .postId(post.getId())
+                .title(post.getTitle())
+                .description(post.getDescription())
+                .imageUrl(post.getImageUrl())
+                .postCoordinates(post.getPostCoordinates().stream()
                     .map(PostCoordinateDTO::fromEntity)
                     .toList())
-				.build())
+                .build())
             .toList();
 
         return Response.ok(postResponses);
