@@ -8,7 +8,7 @@ public class ProbeController {
 
 	@RequestMapping("/probe")
 	public String probe() {
-		return "dev-rat!";
+		return "hamsters!";
 	}
 
 }
