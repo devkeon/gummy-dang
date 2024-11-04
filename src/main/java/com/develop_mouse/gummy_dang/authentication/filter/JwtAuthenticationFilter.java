@@ -107,7 +107,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				.path("/")
 				.httpOnly(true)
 				.maxAge(COOKIE_EXPIRATION)
-				.sameSite("Lax")
+				.sameSite("None")
 				.secure(false)
 				.build();
 

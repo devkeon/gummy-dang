@@ -94,8 +94,7 @@ public class SecurityConfig {
 		corsConfiguration.setAllowedOrigins(List.of(
 			"http://localhost:3000",
 			"http://localhost:8080",
-			"http://3.36.90.207:3000",
-			"http://ec2-3-36-90-207.ap-northeast-2.compute.amazonaws.com:3000"
+			"https://gummydang-1012152884843.asia-northeast3.run.app"
 		));
 		corsConfiguration.setAllowCredentials(true);
 
