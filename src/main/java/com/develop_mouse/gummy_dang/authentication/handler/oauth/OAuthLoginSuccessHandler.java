@@ -64,7 +64,7 @@ public class OAuthLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 			response.setHeader("Set-Cookie", cookie.toString());
 
-			String redirectUrl = "http://localhost:3000/oauth/callback?token=" +
+			String redirectUrl = "https://gummydang-1012152884843.asia-northeast3.run.app/oauth/callback?token=" +
 				URLEncoder.encode(accessToken, StandardCharsets.UTF_8) +
 				"&nickname=" + URLEncoder.encode(member.getNickname(), StandardCharsets.UTF_8);
 
