@@ -21,7 +21,9 @@ public enum ResponseCode {
 	POST_WRITER_DIFFERENCE("PST-001","User and author are different"),
 	OVER_NUM_COORDINATES("PST-002", "A post can have at most 6 coordinates."),
 	COORDINATE_NOT_FOUND("PST-003", "No such coordinate exist."),
-	IMAGE_NOT_FOUND("IMG-001", "There's no image onb request.")
+	IMAGE_NOT_FOUND("IMG-001", "There's no image onb request."),
+	COMMENT_NOT_FOUND("CMT-001", "No such comment exist."),
+	COMMENT_WRITER_DIFFERENCE("CMT-002", "User and author are different"),
 	;
 
 	private final String responseCode;
