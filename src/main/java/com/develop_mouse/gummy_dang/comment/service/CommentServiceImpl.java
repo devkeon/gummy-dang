@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,12 +38,10 @@ public class CommentServiceImpl implements CommentService{
                 .findAny()
                 .orElseThrow(() -> new BusinessException(ResponseCode.MEMBER_NOT_FOUND));
 
-        Optional<Post> existingPost = postRepository.findById(commentRequest.getPostId());
-        if (existingPost.isEmpty()){
-            throw new BusinessException(ResponseCode.POST_NOT_FOUND);
-        }
-
-        Post post = existingPost.get();
+        Post post = postRepository.findById(commentRequest.getPostId())
+            .stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.POST_NOT_FOUND));
 
         Comment comment = Comment.builder()
                 .member(user)
@@ -53,10 +52,11 @@ public class CommentServiceImpl implements CommentService{
         Comment savedComment = commentRepository.save(comment);
 
         CommentResponse response = CommentResponse.builder()
-                .id(savedComment.getId())
-                .postId(savedComment.getPost().getId())
-                .content(commentRequest.getContent())
-                .build();
+            .id(savedComment.getId())
+            .postId(savedComment.getPost().getId())
+            .content(savedComment.getContent())
+            .createdAt(LocalDate.from(savedComment.getCreatedAt()))
+            .build();
 
 
         return Response.ok(response);
@@ -65,14 +65,15 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public Response<CommentResponse> updateComment(CommentRequest commentRequest) {
 
-        Optional<Comment> existingComment = commentRepository.findById(commentRequest.getId());
-        if (existingComment.isEmpty()){
-            throw new BusinessException(ResponseCode.COMMENT_NOT_FOUND);
-        }
+        Comment comment = commentRepository.findById(commentRequest.getId())
+            .stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.COMMENT_NOT_FOUND));
 
-        Comment comment = existingComment.get();
+        Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.MEMBER_NOT_FOUND));
 
-        Member user = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId()).get();
         if (!comment.getMember().equals(user)){
             throw new BusinessException(ResponseCode.COMMENT_WRITER_DIFFERENCE);
         }
@@ -82,18 +83,19 @@ public class CommentServiceImpl implements CommentService{
         Comment savedComment = commentRepository.save(comment);
 
         CommentResponse response = CommentResponse.builder()
-                .id(savedComment.getId())
-                .postId(savedComment.getPost().getId())
-                .content(savedComment.getContent())
-                .build();
+            .id(savedComment.getId())
+            .postId(savedComment.getPost().getId())
+            .content(savedComment.getContent())
+            .createdAt(LocalDate.from(savedComment.getCreatedAt()))
+            .build();
 
         return Response.ok(response);
     }
 
     @Override
-    public Response<Void> deleteComment(CommentRequest commentRequest) {
+    public Response<Void> deleteComment(Long commentId) {
 
-        Comment comment = commentRepository.findById(commentRequest.getId()).stream()
+        Comment comment = commentRepository.findById(commentId).stream()
                 .findAny()
                 .orElseThrow(()-> new BusinessException(ResponseCode.COMMENT_NOT_FOUND));
 
@@ -113,22 +115,21 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public Response<List<CommentResponse>> listComments(Long postId) {
 
-        Optional<Post> postRepositoryById = postRepository.findById(postId);
-        if (postRepositoryById.isEmpty()){
-            throw new BusinessException(ResponseCode.POST_NOT_FOUND);
-        }
-
-        Post post = postRepositoryById.get();
+        Post post = postRepository.findById(postId)
+            .stream()
+            .findAny()
+            .orElseThrow(() -> new BusinessException(ResponseCode.POST_NOT_FOUND));
 
         List<Comment> comments = commentRepository.findByPost(post);
 
         List<CommentResponse> commentResponses = comments.stream()
-                .map(comment -> CommentResponse.builder()
-                        .id(comment.getId())
-                        .postId(comment.getPost().getId())
-                        .content(comment.getContent())
-                        .build())
-                .toList();
+            .map(comment -> CommentResponse.builder()
+                .id(comment.getId())
+                .postId(comment.getPost().getId())
+                .content(comment.getContent())
+                .createdAt(LocalDate.from(comment.getCreatedAt()))
+                .build())
+            .toList();
 
         return Response.ok(commentResponses);
     }
