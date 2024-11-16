@@ -23,21 +23,21 @@ public class CommentController {
     }
 
     // 댓글 작성
-    @PostMapping("/post/{postId}/comment")
-    public Response<CommentResponse> createComment(@PathVariable Long postId, @RequestBody CommentRequest commentRequest) {
+    @PostMapping("/post/comment")
+    public Response<CommentResponse> createComment(@RequestBody CommentRequest commentRequest) {
         return commentService.createComment(commentRequest);
     }
 
     // 댓글 수정
-    @PatchMapping("/post/{postId}/comment")
-    public Response<CommentResponse> updateComment(@PathVariable Long postId, @RequestBody CommentRequest commentRequest) {
+    @PatchMapping("/post/comment")
+    public Response<CommentResponse> updateComment(@RequestBody CommentRequest commentRequest) {
         return commentService.updateComment(commentRequest);
     }
 
     // 댓글 삭제
-    @DeleteMapping("/post/{postId}/comment")
-    public Response<Void> deleteComment(@RequestBody CommentRequest commentRequest) {
-        return commentService.deleteComment(commentRequest);
+    @DeleteMapping("/post/comment/{commentId}")
+    public Response<Void> deleteComment(@PathVariable Long commentId) {
+        return commentService.deleteComment(commentId);
     }
 
 

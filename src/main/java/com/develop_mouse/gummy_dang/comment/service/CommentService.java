@@ -11,7 +11,7 @@ public interface CommentService {
     Response<CommentResponse> createComment(CommentRequest commentRequest);
     Response<CommentResponse> updateComment(CommentRequest commentRequest);
     // Response<CommentResponse> detailComment(Long id);
-    Response<Void> deleteComment(CommentRequest commentRequest);
+    Response<Void> deleteComment(Long commentId);
     Response<List<CommentResponse>> listComments(Long postId);
 
 }
