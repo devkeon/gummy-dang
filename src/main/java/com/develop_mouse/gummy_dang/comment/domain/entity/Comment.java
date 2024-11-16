@@ -1,5 +1,9 @@
 package com.develop_mouse.gummy_dang.comment.domain.entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import com.develop_mouse.gummy_dang.common.domain.entity.BaseEntity;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
 import jakarta.persistence.*;
@@ -13,10 +17,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comments")
-//@SQLDelete(sql = "UPDATE comments SET active_status = 'DELETED' WHERE comment_id = ?")
-//@SQLRestriction("active_status <> 'DELETED'")
-//요 column이 DB에 없다고 계속 오류나서 일단 주석처리 했어염 !!
-public class Comment {
+@SQLDelete(sql = "UPDATE comments SET active_status = 'DELETED' WHERE comment_id = ?")
+@SQLRestriction("active_status <> 'DELETED'")
+public class Comment extends BaseEntity {
     @Getter
     @Id
     @Column(name = "comment_id")
