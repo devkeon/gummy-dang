@@ -24,6 +24,8 @@ public enum ResponseCode {
 	IMAGE_NOT_FOUND("IMG-001", "There's no image onb request."),
 	COMMENT_NOT_FOUND("CMT-001", "No such comment exist."),
 	COMMENT_WRITER_DIFFERENCE("CMT-002", "User and author are different"),
+	LIKE_NOT_FOUND("LKE-001", "Like count not found."),
+	LIKE_DUPLICATE("LKE-002", "Like is duplicate.")
 	;
 
 	private final String responseCode;

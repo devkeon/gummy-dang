@@ -23,6 +23,8 @@ public class PostResponse {
 	private String description;
 	private String imageUrl;
 	private LocalDate createdAt;
+	@Builder.Default
+	private Boolean liked = false;
 
 	private List<PostCoordinateDTO> postCoordinates;
 
