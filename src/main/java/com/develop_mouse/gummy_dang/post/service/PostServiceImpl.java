@@ -4,10 +4,10 @@ import com.develop_mouse.gummy_dang.authentication.util.SecurityContextUtil;
 import com.develop_mouse.gummy_dang.common.Exception.BusinessException;
 import com.develop_mouse.gummy_dang.common.domain.ResponseCode;
 import com.develop_mouse.gummy_dang.common.domain.response.Response;
+import com.develop_mouse.gummy_dang.like.repository.LikeRepository;
 import com.develop_mouse.gummy_dang.member.domain.entity.Member;
 import com.develop_mouse.gummy_dang.member.repository.MemberRepository;
 import com.develop_mouse.gummy_dang.post.DTO.PostCoordinateDTO;
-import com.develop_mouse.gummy_dang.post.DTO.PostDTO;
 import com.develop_mouse.gummy_dang.post.domain.entity.Post;
 import com.develop_mouse.gummy_dang.post.domain.entity.PostCoordinate;
 import com.develop_mouse.gummy_dang.post.domain.request.PostRequest;
@@ -43,6 +43,7 @@ public class PostServiceImpl implements PostService{
     private final MemberRepository memberRepository;
     private final SecurityContextUtil securityContextUtil; // 현 사용자 불러오기 위해 주입
     private final PostCoordinateRepository postCoordinateRepository;
+    private final LikeRepository likeRepository;
 
     // +) 이미지에서 사용
     private ServletContext servletContext; // ServletContext 주입
@@ -189,6 +190,7 @@ public class PostServiceImpl implements PostService{
     // 글 하나 보기
     @Override
     public Response<PostResponse> detailPost(Long id) {
+        Optional<Member> member = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId());
         Post post = postRepository.findById(id).stream()
             .findAny()
             .orElseThrow(() -> new BusinessException(ResponseCode.POST_NOT_FOUND));
@@ -198,6 +200,7 @@ public class PostServiceImpl implements PostService{
             .title(post.getTitle())
             .description(post.getDescription())
             .imageUrl(post.getImageUrl())
+            .liked(member.isPresent() && likeRepository.findByMemberAndPost(member.get(), post).isPresent())
             .postCoordinates(post.getPostCoordinates().stream()
                 .map(PostCoordinateDTO::fromEntity)
                 .toList())
@@ -210,6 +213,7 @@ public class PostServiceImpl implements PostService{
     // 글 목록
     @Override
     public Response<List<PostResponse>> postList() {
+        Optional<Member> member = memberRepository.findById(securityContextUtil.getContextMemberInfo().getMemberId());
         List<Post> posts = postRepository.findAll();
 
         List<PostResponse> postResponses = posts.stream()
@@ -218,6 +222,7 @@ public class PostServiceImpl implements PostService{
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .imageUrl(post.getImageUrl())
+                .liked(member.isPresent() && likeRepository.findByMemberAndPost(member.get(), post).isPresent())
                 .postCoordinates(post.getPostCoordinates().stream()
                     .map(PostCoordinateDTO::fromEntity)
                     .toList())
