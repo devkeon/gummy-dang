@@ -226,6 +226,7 @@ public class PostServiceImpl implements PostService{
                 .postCoordinates(post.getPostCoordinates().stream()
                     .map(PostCoordinateDTO::fromEntity)
                     .toList())
+                .createdAt(post.getCreatedAt().toLocalDate())
                 .build())
             .toList();
 
